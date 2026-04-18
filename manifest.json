@@ -1,0 +1,16 @@
+{
+    "name": "もぐもぐヒーロー",
+    "short_name": "もぐもぐ",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#0a0a0a",
+    "theme_color": "#ff4b4b",
+    "orientation": "landscape",
+    "icons": [
+        {
+            "src": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMjAiIHI9IjcwIiBmaWxsPSIjZjVmNWY1Ii8+PHBhdGggZD0iTSAzMCAxMjAgQSA3MCA3MCAwIDAgMSAxNzAgMTIwIEwgMTcwIDExMCBBIDcwIDcwIDAgMCAwIDMwIDExMCBaIiBmaWxsPSIjZmY0YjRiIi8+PC9zdmc+",
+            "sizes": "192x192",
+            "type": "image/svg+xml"
+        }
+    ]
+}

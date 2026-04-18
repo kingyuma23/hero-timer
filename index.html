@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>もぐもぐヒーロー</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- ヒーロー登場エリア -->
+        <div class="hero-container">
+            <div class="hero-mask" id="heroMask">
+                <!-- 可愛いヒーローマスクのSVG -->
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="eye-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#ff6b6b" />
+                            <stop offset="100%" stop-color="#ff0000" />
+                        </linearGradient>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    
+                    <!-- 丸くて可愛いアンテナ -->
+                    <path class="antenna" d="M 100 35 L 85 70 L 115 70 Z" fill="#ffd700" stroke="#ffb400" stroke-width="4" stroke-linejoin="round" filter="url(#glow)"/>
+                    <circle cx="100" cy="35" r="12" fill="#ffd700" />
+                    
+                    <!-- 顔ベース（ヘルメット風） -->
+                    <circle cx="100" cy="120" r="70" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="4"/>
+                    
+                    <!-- ヘルメットのバイザー部分（上半分） -->
+                    <path d="M 30 120 A 70 70 0 0 1 170 120 L 170 110 A 70 70 0 0 0 30 110 Z" fill="#ff4b4b" />
+                    
+                    <!-- 大きくて可愛い目 -->
+                    <ellipse class="eye right-eye" cx="135" cy="115" rx="25" ry="35" fill="url(#eye-gradient)" />
+                    <circle cx="140" cy="100" r="8" fill="#fff" /> <!-- キラキラハイライト -->
+                    
+                    <ellipse class="eye left-eye" cx="65" cy="115" rx="25" ry="35" fill="url(#eye-gradient)" />
+                    <circle cx="70" cy="100" r="8" fill="#fff" /> <!-- キラキラハイライト -->
+                    
+                    <!-- ほっぺた -->
+                    <ellipse cx="45" cy="145" rx="12" ry="8" fill="#ffb6c1" opacity="0.8"/>
+                    <ellipse cx="155" cy="145" rx="12" ry="8" fill="#ffb6c1" opacity="0.8"/>
+                    
+                    <!-- にっこり口 -->
+                    <path class="mouth" d="M 85 160 Q 100 175 115 160" fill="none" stroke="#ff6b6b" stroke-width="5" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="speech-bubble" id="message">さあ、いっしょにたべよう！</div>
+        </div>
+
+        <!-- ヒーローエネルギーゲージ (進捗) -->
+        <div class="progress-section">
+            <div class="progress-label">ヒーローエネルギー</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+                <div class="progress-glow"></div>
+            </div>
+        </div>
+
+        <!-- 制限時間タイマー -->
+        <div class="timer-section">
+            <div class="timer-display" id="timer">30:00</div>
+            <div class="timer-controls">
+                <button class="small-btn" id="btnMinus">-5分</button>
+                <button class="small-btn start-btn" id="btnStart">スタート</button>
+                <button class="small-btn" id="btnPlus">+5分</button>
+                <button class="small-btn reset-btn" id="btnReset" style="background: rgba(255,100,100,0.2); border-color: rgba(255,100,100,0.5); color: #ff8080;">リセット</button>
+            </div>
+        </div>
+
+        <!-- 変身ベルト風 もぐもぐボタン -->
+        <div class="belt-container" id="beltContainer">
+            <button class="belt-button" id="btnEat">
+                <div class="belt-core" id="beltCore">
+                    <span class="belt-text">たべたよ！</span>
+                </div>
+                <div class="belt-ring ring-left"></div>
+                <div class="belt-ring ring-right"></div>
+            </button>
+        </div>
+    </div>
+
+    <!-- パーティクルコンテナ -->
+    <div id="confetti-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
