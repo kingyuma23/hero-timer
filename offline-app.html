@@ -445,8 +445,6 @@ body {
                         <circle cx="50" cy="50" r="24" fill="none" stroke="#ff4b4b" stroke-width="48" stroke-dasharray="150.796" stroke-dashoffset="0" transform="rotate(-90 50 50)" id="timeSlice" />
                         <line x1="50" y1="50" x2="50" y2="12" stroke="#fff" stroke-width="3" stroke-linecap="round" id="minuteHand"/>
                         <circle cx="50" cy="50" r="4" fill="#fff"/>
-                        <line x1="50" y1="55" x2="50" y2="10" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round" id="secondHand"/>
-                        <circle cx="50" cy="50" r="2" fill="#ffd700"/>
                     </svg>
                 </div>
                 <div class="timer-display" id="timer">30:00</div>
@@ -475,7 +473,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnReset = document.getElementById('btnReset');
     const timeSlice = document.getElementById('timeSlice');
     const minuteHand = document.getElementById('minuteHand');
-    const secondHand = document.getElementById('secondHand');
     let timerInterval = null;
     let totalSeconds = 30 * 60;
     let isRunning = false;
@@ -488,17 +485,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const s = totalSeconds % 60;
         timerDisplay.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         if (totalSeconds <= 5 * 60 && totalSeconds > 0) { timerDisplay.classList.add('danger'); if(timeSlice) timeSlice.setAttribute('stroke', '#ff0000'); } else { timerDisplay.classList.remove('danger'); if(timeSlice) timeSlice.setAttribute('stroke', '#ff4b4b'); }
-        if (timeSlice && minuteHand && secondHand) {
-            let clampedFraction = totalSeconds / 3600;
+        if (timeSlice && minuteHand) {
+            let clampedFraction = m / 60;
             if (clampedFraction > 1) clampedFraction = 1;
             const minuteAngle = (1 - clampedFraction) * 360;
             timeSlice.setAttribute('transform', `rotate(${minuteAngle - 90} 50 50)`);
             timeSlice.style.strokeDasharray = `${150.796 * clampedFraction} 150.796`;
             timeSlice.style.strokeDashoffset = 0;
             minuteHand.setAttribute('transform', `rotate(${minuteAngle} 50 50)`);
-            const elapsedSeconds = (60 - s) % 60;
-            const secondAngle = (elapsedSeconds / 60) * 360;
-            secondHand.setAttribute('transform', `rotate(${secondAngle} 50 50)`);
         }
     }
     function toggleTimer() {

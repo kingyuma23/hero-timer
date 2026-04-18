@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnReset = document.getElementById('btnReset');
     const timeSlice = document.getElementById('timeSlice');
     const minuteHand = document.getElementById('minuteHand');
-    const secondHand = document.getElementById('secondHand');
     
     // State
     let timerInterval = null;
@@ -49,8 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Update clock UI
-        if (timeSlice && minuteHand && secondHand) {
-            const fractionOfHour = totalSeconds / 3600;
+        if (timeSlice && minuteHand) {
+            const fractionOfHour = m / 60;
             const circumference = 150.796;
             let clampedFraction = fractionOfHour;
             if (clampedFraction > 1) clampedFraction = 1;
@@ -62,10 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
             timeSlice.style.strokeDashoffset = 0;
             
             minuteHand.setAttribute('transform', `rotate(${minuteAngle} 50 50)`);
-            
-            const elapsedSeconds = (60 - s) % 60;
-            const secondAngle = (elapsedSeconds / 60) * 360;
-            secondHand.setAttribute('transform', `rotate(${secondAngle} 50 50)`);
         }
     }
 
