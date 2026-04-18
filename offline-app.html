@@ -25,6 +25,9 @@ body { font-family: 'M PLUS Rounded 1c', sans-serif; background: linear-gradient
 .progress-bar::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, transparent 50%, rgba(0,0,0,0.2) 100%); border-radius: 17px; }
 @keyframes gradientMove { 0% { background-position: 100% 0%; } 100% { background-position: -100% 0%; } }
 .timer-section { display: flex; flex-direction: column; align-items: center; margin: 3vh 0; }
+.clock-container { width: 25vh; height: 25vh; max-width: 250px; max-height: 250px; margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(0,0,0,0.5)); }
+.clock-svg { width: 100%; height: 100%; display: block; }
+#timeSlice { transition: stroke-dashoffset 0.5s linear, stroke 0.3s; }
 .timer-display { font-size: 5rem; font-weight: 900; font-variant-numeric: tabular-nums; text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); margin-bottom: 15px; letter-spacing: 2px; }
 .timer-display.danger { color: #ff4b4b; text-shadow: 0 0 20px rgba(255, 75, 75, 0.8); animation: pulse 1s infinite; }
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
@@ -94,6 +97,30 @@ body { font-family: 'M PLUS Rounded 1c', sans-serif; background: linear-gradient
             </div>
         </div>
         <div class="timer-section">
+            <div class="clock-container">
+                <svg class="clock-svg" viewBox="0 0 100 100" id="clockSvg">
+                    <circle cx="50" cy="50" r="48" fill="#1a1a1a" stroke="#444" stroke-width="4"/>
+                    <g id="clockTicks">
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(0 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(30 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(60 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(90 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(120 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(150 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(180 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(210 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(240 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(270 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(300 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(330 50 50)"/>
+                    </g>
+                    <circle cx="50" cy="50" r="24" fill="none" stroke="#ff4b4b" stroke-width="48" stroke-dasharray="150.796" stroke-dashoffset="0" transform="rotate(-90 50 50)" id="timeSlice" />
+                    <line x1="50" y1="50" x2="50" y2="12" stroke="#fff" stroke-width="3" stroke-linecap="round" id="minuteHand"/>
+                    <circle cx="50" cy="50" r="4" fill="#fff"/>
+                    <line x1="50" y1="55" x2="50" y2="10" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round" id="secondHand"/>
+                    <circle cx="50" cy="50" r="2" fill="#ffd700"/>
+                </svg>
+            </div>
             <div class="timer-display" id="timer">30:00</div>
             <div class="timer-controls">
                 <button class="small-btn" id="btnMinus">-5分</button>
@@ -125,18 +152,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnPlus = document.getElementById('btnPlus');
     const btnEat = document.getElementById('btnEat');
     const btnReset = document.getElementById('btnReset');
+    const timeSlice = document.getElementById('timeSlice');
+    const minuteHand = document.getElementById('minuteHand');
+    const secondHand = document.getElementById('secondHand');
     let timerInterval = null;
     let totalSeconds = 30 * 60;
     let isRunning = false;
     let currentBites = 0;
     const maxBites = 20;
-    const messages = ["すごい！", "そのちょうし！", "もぐもぐ！", "かっこいい！", "パワーアップ！", "さいこう！", "エネルギーチャージ！", "ヒーローみたい！", "いいぞいいぞ！"];
+    const messages = ["すごい！", "そのちょうし！", "もぐもぐ！", "かっこいい！", "ぱわーあっぷ！", "さいこう！", "えねるぎーちゃーじ！", "ひーろーみたい！", "いいぞいいぞ！"];
     function updateTimerDisplay() {
         if (totalSeconds < 0) totalSeconds = 0;
         const m = Math.floor(totalSeconds / 60);
         const s = totalSeconds % 60;
         timerDisplay.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        if (totalSeconds <= 5 * 60 && totalSeconds > 0) { timerDisplay.classList.add('danger'); } else { timerDisplay.classList.remove('danger'); }
+        if (totalSeconds <= 5 * 60 && totalSeconds > 0) { timerDisplay.classList.add('danger'); if(timeSlice) timeSlice.setAttribute('stroke', '#ff0000'); } else { timerDisplay.classList.remove('danger'); if(timeSlice) timeSlice.setAttribute('stroke', '#ff4b4b'); }
+        if (timeSlice && minuteHand && secondHand) {
+            let clampedFraction = totalSeconds / 3600;
+            if (clampedFraction > 1) clampedFraction = 1;
+            timeSlice.style.strokeDashoffset = 150.796 * (1 - clampedFraction);
+            minuteHand.setAttribute('transform', `rotate(${clampedFraction * 360} 50 50)`);
+            secondHand.setAttribute('transform', `rotate(${(s / 60) * 360} 50 50)`);
+        }
     }
     function toggleTimer() {
         if (isRunning) {
@@ -162,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { heroMask.classList.remove('eating'); btnEat.classList.remove('active'); }, 300);
         if (currentBites < maxBites) {
             currentBites++; progressBar.style.width = `${(currentBites / maxBites) * 100}%`;
-            if (currentBites === maxBites) { heroMask.classList.add('happy'); showMessage("ミッションクリア！！ぜんぶたべたね！"); fireConfetti(); if (isRunning) toggleTimer(); } else { showMessage(messages[Math.floor(Math.random() * messages.length)]); }
+            if (currentBites === maxBites) { heroMask.classList.add('happy'); showMessage("みっしょんくりあ！！ぜんぶたべたね！"); fireConfetti(); if (isRunning) toggleTimer(); } else { showMessage(messages[Math.floor(Math.random() * messages.length)]); }
         } else {
              heroMask.classList.add('happy'); setTimeout(() => heroMask.classList.remove('happy'), 500); fireConfetti();
         }

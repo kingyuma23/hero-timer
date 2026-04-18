@@ -68,6 +68,43 @@
 
         <!-- 制限時間タイマー -->
         <div class="timer-section">
+            <div class="clock-container">
+                <svg class="clock-svg" viewBox="0 0 100 100" id="clockSvg">
+                    <!-- Clock background -->
+                    <circle cx="50" cy="50" r="48" fill="#1a1a1a" stroke="#444" stroke-width="4"/>
+                    
+                    <!-- Tick marks will be generated or static -->
+                    <g id="clockTicks">
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(0 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(30 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(60 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(90 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(120 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(150 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(180 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(210 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(240 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(270 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(300 50 50)"/>
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(330 50 50)"/>
+                    </g>
+                    
+                    <!-- Remaining time slice -->
+                    <circle cx="50" cy="50" r="24" fill="none" stroke="#ff4b4b" stroke-width="48"
+                            stroke-dasharray="150.796" stroke-dashoffset="0"
+                            transform="rotate(-90 50 50)" id="timeSlice" />
+                    
+                    <!-- Minute hand (shows remaining minutes limit) -->
+                    <line x1="50" y1="50" x2="50" y2="12" stroke="#fff" stroke-width="3" stroke-linecap="round" id="minuteHand"/>
+                    
+                    <!-- Center dot -->
+                    <circle cx="50" cy="50" r="4" fill="#fff"/>
+                    
+                    <!-- Second hand (shows seconds ticking) -->
+                    <line x1="50" y1="55" x2="50" y2="10" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round" id="secondHand"/>
+                    <circle cx="50" cy="50" r="2" fill="#ffd700"/>
+                </svg>
+            </div>
             <div class="timer-display" id="timer">30:00</div>
             <div class="timer-controls">
                 <button class="small-btn" id="btnMinus">-5分</button>

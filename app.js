@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnPlus = document.getElementById('btnPlus');
     const btnEat = document.getElementById('btnEat');
     const btnReset = document.getElementById('btnReset');
+    const timeSlice = document.getElementById('timeSlice');
+    const minuteHand = document.getElementById('minuteHand');
+    const secondHand = document.getElementById('secondHand');
     
     // State
     let timerInterval = null;
@@ -23,10 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
         "そのちょうし！",
         "もぐもぐ！",
         "かっこいい！",
-        "パワーアップ！",
+        "ぱわーあっぷ！",
         "さいこう！",
-        "エネルギーチャージ！",
-        "ヒーローみたい！",
+        "えねるぎーちゃーじ！",
+        "ひーろーみたい！",
         "いいぞいいぞ！"
     ];
 
@@ -39,8 +42,27 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (totalSeconds <= 5 * 60 && totalSeconds > 0) {
             timerDisplay.classList.add('danger');
+            if (timeSlice) timeSlice.setAttribute('stroke', '#ff0000');
         } else {
             timerDisplay.classList.remove('danger');
+            if (timeSlice) timeSlice.setAttribute('stroke', '#ff4b4b');
+        }
+
+        // Update clock UI
+        if (timeSlice && minuteHand && secondHand) {
+            const fractionOfHour = totalSeconds / 3600;
+            const circumference = 150.796;
+            let clampedFraction = fractionOfHour;
+            if (clampedFraction > 1) clampedFraction = 1;
+            
+            timeSlice.style.strokeDasharray = circumference;
+            timeSlice.style.strokeDashoffset = circumference * (1 - clampedFraction);
+            
+            const minuteAngle = clampedFraction * 360;
+            minuteHand.setAttribute('transform', `rotate(${minuteAngle} 50 50)`);
+            
+            const secondAngle = (s / 60) * 360;
+            secondHand.setAttribute('transform', `rotate(${secondAngle} 50 50)`);
         }
     }
 
@@ -106,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentBites === maxBites) {
                 // Clear!
                 heroMask.classList.add('happy');
-                showMessage("ミッションクリア！！ぜんぶたべたね！");
+                showMessage("みっしょんくりあ！！ぜんぶたべたね！");
                 fireConfetti();
                 if (isRunning) toggleTimer(); // Stop timer
             } else {
