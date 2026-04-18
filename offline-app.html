@@ -384,6 +384,15 @@ body {
                 <div class="speech-bubble" id="message">さあ、いっしょにたべよう！</div>
             </div>
 
+            <!-- ヒーローエネルギーゲージ (進捗) -->
+            <div class="progress-section">
+                <div class="progress-label">ヒーローエネルギー</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                    <div class="progress-glow"></div>
+                </div>
+            </div>
+
             <!-- 変身ベルト風 もぐもぐボタン -->
             <div class="belt-container" id="beltContainer">
                 <button class="belt-button" id="btnEat">
@@ -419,6 +428,20 @@ body {
                             <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(300 50 50)"/>
                             <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(330 50 50)"/>
                         </g>
+                        <g id="clockNumbers">
+                            <text x="50.0" y="16.0" font-size="8" font-weight="bold" fill="#bbb" text-anchor="middle" dominant-baseline="central">0</text>
+                            <text x="67.0" y="20.6" font-size="8" font-weight="bold" fill="#bbb" text-anchor="middle" dominant-baseline="central">5</text>
+                            <text x="79.4" y="33.0" font-size="8" font-weight="bold" fill="#bbb" text-anchor="middle" dominant-baseline="central">10</text>
+                            <text x="84.0" y="50.0" font-size="8" font-weight="bold" fill="#bbb" text-anchor="middle" dominant-baseline="central">15</text>
+                            <text x="79.4" y="67.0" font-size="8" font-weight="bold" fill="#bbb" text-anchor="middle" dominant-baseline="central">20</text>
+                            <text x="67.0" y="79.4" font-size="8" font-weight="bold" fill="#bbb" text-anchor="middle" dominant-baseline="central">25</text>
+                            <text x="50.0" y="84.0" font-size="8" font-weight="bold" fill="#bbb" text-anchor="middle" dominant-baseline="central">30</text>
+                            <text x="33.0" y="79.4" font-size="8" font-weight="bold" fill="#bbb" text-anchor="middle" dominant-baseline="central">35</text>
+                            <text x="20.6" y="67.0" font-size="8" font-weight="bold" fill="#bbb" text-anchor="middle" dominant-baseline="central">40</text>
+                            <text x="16.0" y="50.0" font-size="8" font-weight="bold" fill="#bbb" text-anchor="middle" dominant-baseline="central">45</text>
+                            <text x="20.6" y="33.0" font-size="8" font-weight="bold" fill="#bbb" text-anchor="middle" dominant-baseline="central">50</text>
+                            <text x="33.0" y="20.6" font-size="8" font-weight="bold" fill="#bbb" text-anchor="middle" dominant-baseline="central">55</text>
+                        </g>
                         <circle cx="50" cy="50" r="24" fill="none" stroke="#ff4b4b" stroke-width="48" stroke-dasharray="150.796" stroke-dashoffset="0" transform="rotate(-90 50 50)" id="timeSlice" />
                         <line x1="50" y1="50" x2="50" y2="12" stroke="#fff" stroke-width="3" stroke-linecap="round" id="minuteHand"/>
                         <circle cx="50" cy="50" r="4" fill="#fff"/>
@@ -435,14 +458,6 @@ body {
                 </div>
             </div>
             
-            <!-- ヒーローエネルギーゲージ (進捗) -->
-            <div class="progress-section">
-                <div class="progress-label">ヒーローエネルギー</div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="progressBar"></div>
-                    <div class="progress-glow"></div>
-                </div>
-            </div>
         </div>
     </div>
     <div id="confetti-container"></div>
@@ -476,9 +491,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (timeSlice && minuteHand && secondHand) {
             let clampedFraction = totalSeconds / 3600;
             if (clampedFraction > 1) clampedFraction = 1;
-            timeSlice.style.strokeDashoffset = 150.796 * (1 - clampedFraction);
-            minuteHand.setAttribute('transform', `rotate(${clampedFraction * 360} 50 50)`);
-            secondHand.setAttribute('transform', `rotate(${(s / 60) * 360} 50 50)`);
+            const minuteAngle = (1 - clampedFraction) * 360;
+            timeSlice.setAttribute('transform', `rotate(${minuteAngle - 90} 50 50)`);
+            timeSlice.style.strokeDasharray = `${150.796 * clampedFraction} 150.796`;
+            timeSlice.style.strokeDashoffset = 0;
+            minuteHand.setAttribute('transform', `rotate(${minuteAngle} 50 50)`);
+            const elapsedSeconds = (60 - s) % 60;
+            const secondAngle = (elapsedSeconds / 60) * 360;
+            secondHand.setAttribute('transform', `rotate(${secondAngle} 50 50)`);
         }
     }
     function toggleTimer() {

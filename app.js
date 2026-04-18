@@ -55,13 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
             let clampedFraction = fractionOfHour;
             if (clampedFraction > 1) clampedFraction = 1;
             
-            timeSlice.style.strokeDasharray = circumference;
-            timeSlice.style.strokeDashoffset = circumference * (1 - clampedFraction);
+            const minuteAngle = (1 - clampedFraction) * 360;
             
-            const minuteAngle = clampedFraction * 360;
+            timeSlice.setAttribute('transform', `rotate(${minuteAngle - 90} 50 50)`);
+            timeSlice.style.strokeDasharray = `${circumference * clampedFraction} ${circumference}`;
+            timeSlice.style.strokeDashoffset = 0;
+            
             minuteHand.setAttribute('transform', `rotate(${minuteAngle} 50 50)`);
             
-            const secondAngle = (s / 60) * 360;
+            const elapsedSeconds = (60 - s) % 60;
+            const secondAngle = (elapsedSeconds / 60) * 360;
             secondHand.setAttribute('transform', `rotate(${secondAngle} 50 50)`);
         }
     }
