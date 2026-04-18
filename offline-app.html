@@ -6,137 +6,443 @@
     <title>もぐもぐヒーロー</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;900&display=swap" rel="stylesheet">
     <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'M PLUS Rounded 1c', sans-serif; background: linear-gradient(135deg, #0a0a0a, #1a1a1a, #2b0000); color: #fff; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
-#app { width: 100%; max-width: 800px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; position: relative; }
-.hero-container { display: flex; flex-direction: column; align-items: center; margin-top: 4vh; position: relative; z-index: 10; }
-.hero-mask { width: 25vh; height: 25vh; max-width: 250px; max-height: 250px; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.3)); }
-.hero-mask.eating { transform: scale(1.1) translateY(-10px); }
-.hero-mask.happy { transform: scale(1.2) translateY(-20px) rotate(5deg); filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8)); }
-.eye { transition: fill 0.3s; }
-.hero-mask.happy .eye { filter: brightness(1.5) hue-rotate(-50deg); }
-.speech-bubble { background: rgba(255, 255, 255, 0.95); color: #1a1a1a; padding: 15px 30px; border-radius: 30px; font-size: 1.5rem; font-weight: 900; margin-top: 20px; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.5); opacity: 0; transform: translateY(20px); transition: opacity 0.3s, transform 0.3s; text-align: center; }
-.speech-bubble.show { opacity: 1; transform: translateY(0); }
-.speech-bubble::before { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); border-width: 0 15px 15px 15px; border-style: solid; border-color: transparent transparent rgba(255, 255, 255, 0.95) transparent; }
-.progress-section { width: 100%; padding: 0 5%; }
-.progress-label { font-size: 1.5rem; font-weight: 700; text-align: center; margin-bottom: 10px; color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); letter-spacing: 2px; }
-.progress-bar-container { width: 100%; height: 40px; background: #222; border-radius: 20px; overflow: hidden; position: relative; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); border: 3px solid #555; }
-.progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #ff4b4b, #ff0000, #ff8c00, #ffd700); background-size: 200% 100%; border-radius: 17px; transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: gradientMove 2s linear infinite; position: relative; }
-.progress-bar::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, transparent 50%, rgba(0,0,0,0.2) 100%); border-radius: 17px; }
-@keyframes gradientMove { 0% { background-position: 100% 0%; } 100% { background-position: -100% 0%; } }
-.timer-section { display: flex; flex-direction: column; align-items: center; margin: 3vh 0; }
-.clock-container { width: 25vh; height: 25vh; max-width: 250px; max-height: 250px; margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(0,0,0,0.5)); }
-.clock-svg { width: 100%; height: 100%; display: block; }
-#timeSlice { transition: stroke-dashoffset 0.5s linear, stroke 0.3s; }
-.timer-display { font-size: 5rem; font-weight: 900; font-variant-numeric: tabular-nums; text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); margin-bottom: 15px; letter-spacing: 2px; }
-.timer-display.danger { color: #ff4b4b; text-shadow: 0 0 20px rgba(255, 75, 75, 0.8); animation: pulse 1s infinite; }
-@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-.timer-controls { display: flex; gap: 20px; }
-.small-btn { background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3); color: white; padding: 15px 30px; border-radius: 30px; font-size: 1.5rem; font-weight: 700; cursor: pointer; backdrop-filter: blur(5px); transition: all 0.2s; }
-.small-btn.start-btn { background: rgba(0, 255, 100, 0.2); border-color: rgba(0, 255, 100, 0.5); color: #00ff64; }
-.small-btn.start-btn.running { background: rgba(255, 150, 0, 0.2); border-color: rgba(255, 150, 0, 0.5); color: #ffb400; }
-.small-btn:active { transform: scale(0.95); }
-.belt-container { width: 100%; display: flex; justify-content: center; margin-bottom: 5vh; }
-.belt-button { background: #222; width: 300px; height: 140px; border-radius: 70px; position: relative; border: 5px solid #444; box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 5px 15px rgba(255,255,255,0.2); cursor: pointer; outline: none; transition: transform 0.1s; display: flex; justify-content: center; align-items: center; overflow: hidden; -webkit-tap-highlight-color: transparent; }
-.belt-button:active { transform: scale(0.95) translateY(5px); box-shadow: 0 10px 20px rgba(0,0,0,0.8); }
-.belt-core { width: 110px; height: 110px; background: radial-gradient(circle, #ff0000 0%, #800000 100%); border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 30px rgba(255,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.5); border: 5px solid #111; z-index: 2; transition: all 0.3s; }
-.belt-text { color: white; font-size: 1.5rem; font-weight: 900; text-shadow: 2px 2px 4px black; pointer-events: none; }
-.belt-button.active .belt-core { background: radial-gradient(circle, #00ff00 0%, #008000 100%); box-shadow: 0 0 50px rgba(0,255,0,0.9), inset 0 0 20px rgba(255,255,255,0.8); transform: rotate(360deg) scale(1.1); }
-.belt-ring { position: absolute; width: 80px; height: 100%; background: linear-gradient(90deg, #444, #aaa, #444); z-index: 1; }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    background: linear-gradient(135deg, #0B132B, #1C2541, #0a0a1a);
+    color: #fff;
+    height: 100vh;
+    overflow: hidden; /* Prevent scrolling on iPad */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    touch-action: manipulation; /* Prevent double-tap zoom */
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#app.landscape-layout {
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3vh 4vw;
+    gap: 3vw;
+}
+
+.left-panel, .right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 40px;
+    padding: 3vh 2vw;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.05);
+}
+
+/* ヒーローエリア */
+.hero-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+.hero-mask {
+    width: 32vh;
+    height: 32vh;
+    max-width: 300px;
+    max-height: 300px;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    filter: drop-shadow(0 0 30px rgba(79, 172, 254, 0.5));
+}
+
+.hero-mask.eating {
+    transform: scale(1.1) translateY(-10px);
+}
+
+.hero-mask.happy {
+    transform: scale(1.2) translateY(-20px) rotate(5deg);
+    filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8));
+}
+
+.eye {
+    transition: fill 0.3s;
+}
+
+.hero-mask.happy .eye {
+    filter: brightness(1.5) hue-rotate(-50deg); /* 黄金に光るようなイメージ */
+}
+
+.speech-bubble {
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a1a1a;
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-top: 20px;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s, transform 0.3s;
+    text-align: center;
+}
+
+.speech-bubble.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.speech-bubble::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 15px 15px 15px;
+    border-style: solid;
+    border-color: transparent transparent rgba(255, 255, 255, 0.95) transparent;
+}
+
+/* 進捗ゲージ */
+.progress-section {
+    width: 100%;
+    padding: 0 5%;
+}
+
+.progress-label {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    letter-spacing: 2px;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 5px 15px rgba(0,0,0,0.8);
+    border: 3px solid #555;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff4b4b, #ff0000, #ff8c00, #ffd700);
+    background-size: 200% 100%;
+    border-radius: 17px;
+    transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: gradientMove 2s linear infinite;
+    position: relative;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, transparent 50%, rgba(0,0,0,0.2) 100%);
+    border-radius: 17px;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 100% 0%; }
+    100% { background-position: -100% 0%; }
+}
+
+.timer-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.clock-container {
+    width: 32vh;
+    height: 32vh;
+    max-width: 300px;
+    max-height: 300px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
+}
+
+.clock-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#timeSlice {
+    transition: stroke-dashoffset 0.5s linear, stroke 0.3s;
+}
+
+.timer-display {
+    font-size: 4.5rem;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 20px rgba(79, 172, 254, 0.8);
+    margin-bottom: 20px;
+    letter-spacing: 3px;
+    color: #4facfe;
+}
+
+.timer-display.danger {
+    color: #ff4b4b;
+    text-shadow: 0 0 20px rgba(255, 75, 75, 0.8);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.timer-controls {
+    display: flex;
+    gap: 20px;
+}
+
+.small-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: all 0.2s;
+}
+
+.small-btn.start-btn {
+    background: rgba(0, 255, 100, 0.2);
+    border-color: rgba(0, 255, 100, 0.5);
+    color: #00ff64;
+}
+
+.small-btn.start-btn.running {
+    background: rgba(255, 150, 0, 0.2);
+    border-color: rgba(255, 150, 0, 0.5);
+    color: #ffb400;
+}
+
+.small-btn:active {
+    transform: scale(0.95);
+}
+
+/* 変身ベルトボタン */
+.belt-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.belt-button {
+    background: #111;
+    width: 280px;
+    height: 110px;
+    border-radius: 55px;
+    position: relative;
+    border: 5px solid #444;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 5px 15px rgba(255,255,255,0.2);
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.belt-button:active {
+    transform: scale(0.95) translateY(5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+}
+
+.belt-core {
+    width: 90px;
+    height: 90px;
+    background: radial-gradient(circle, #ff0000 0%, #800000 100%);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 30px rgba(255,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.5);
+    border: 5px solid #111;
+    z-index: 2;
+    transition: all 0.3s;
+}
+
+.belt-text {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-shadow: 2px 2px 4px black;
+    pointer-events: none;
+}
+
+.belt-button.active .belt-core {
+    background: radial-gradient(circle, #00ff00 0%, #008000 100%);
+    box-shadow: 0 0 50px rgba(0,255,0,0.9), inset 0 0 20px rgba(255,255,255,0.8);
+    transform: rotate(360deg) scale(1.1);
+}
+
+.belt-ring {
+    position: absolute;
+    width: 80px;
+    height: 100%;
+    background: linear-gradient(90deg, #444, #aaa, #444);
+    z-index: 1;
+}
+
 .ring-left { left: 0; }
 .ring-right { right: 0; }
-#confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+/* Confetti Container */
+#confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
     </style>
 </head>
 <body>
-    <div id="app">
-        <!-- ヒーロー登場エリア -->
-        <div class="hero-container">
-            <div class="hero-mask" id="heroMask">
-                <!-- 可愛いヒーローマスクのSVG -->
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="eye-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#ff6b6b" />
-                            <stop offset="100%" stop-color="#ff0000" />
-                        </linearGradient>
-                        <filter id="glow">
-                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                            <feMerge>
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                            </feMerge>
-                        </filter>
-                    </defs>
-                    <!-- 丸くて可愛いアンテナ -->
-                    <path class="antenna" d="M 100 35 L 85 70 L 115 70 Z" fill="#ffd700" stroke="#ffb400" stroke-width="4" stroke-linejoin="round" filter="url(#glow)"/>
-                    <circle cx="100" cy="35" r="12" fill="#ffd700" />
-                    <!-- 顔ベース（ヘルメット風） -->
-                    <circle cx="100" cy="120" r="70" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="4"/>
-                    <!-- ヘルメットのバイザー部分（上半分） -->
-                    <path d="M 30 120 A 70 70 0 0 1 170 120 L 170 110 A 70 70 0 0 0 30 110 Z" fill="#ff4b4b" />
-                    <!-- 大きくて可愛い目 -->
-                    <ellipse class="eye right-eye" cx="135" cy="115" rx="25" ry="35" fill="url(#eye-gradient)" />
-                    <circle cx="140" cy="100" r="8" fill="#fff" />
-                    <ellipse class="eye left-eye" cx="65" cy="115" rx="25" ry="35" fill="url(#eye-gradient)" />
-                    <circle cx="70" cy="100" r="8" fill="#fff" />
-                    <!-- ほっぺた -->
-                    <ellipse cx="45" cy="145" rx="12" ry="8" fill="#ffb6c1" opacity="0.8"/>
-                    <ellipse cx="155" cy="145" rx="12" ry="8" fill="#ffb6c1" opacity="0.8"/>
-                    <!-- にっこり口 -->
-                    <path class="mouth" d="M 85 160 Q 100 175 115 160" fill="none" stroke="#ff6b6b" stroke-width="5" stroke-linecap="round"/>
-                </svg>
-            </div>
-            <div class="speech-bubble" id="message">さあ、いっしょにたべよう！</div>
-        </div>
-        <div class="progress-section">
-            <div class="progress-label">ヒーローエネルギー</div>
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="progressBar"></div>
-                <div class="progress-glow"></div>
-            </div>
-        </div>
-        <div class="timer-section">
-            <div class="clock-container">
-                <svg class="clock-svg" viewBox="0 0 100 100" id="clockSvg">
-                    <circle cx="50" cy="50" r="48" fill="#1a1a1a" stroke="#444" stroke-width="4"/>
-                    <g id="clockTicks">
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(0 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(30 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(60 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(90 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(120 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(150 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(180 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(210 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(240 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(270 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(300 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(330 50 50)"/>
-                    </g>
-                    <circle cx="50" cy="50" r="24" fill="none" stroke="#ff4b4b" stroke-width="48" stroke-dasharray="150.796" stroke-dashoffset="0" transform="rotate(-90 50 50)" id="timeSlice" />
-                    <line x1="50" y1="50" x2="50" y2="12" stroke="#fff" stroke-width="3" stroke-linecap="round" id="minuteHand"/>
-                    <circle cx="50" cy="50" r="4" fill="#fff"/>
-                    <line x1="50" y1="55" x2="50" y2="10" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round" id="secondHand"/>
-                    <circle cx="50" cy="50" r="2" fill="#ffd700"/>
-                </svg>
-            </div>
-            <div class="timer-display" id="timer">30:00</div>
-            <div class="timer-controls">
-                <button class="small-btn" id="btnMinus">-5分</button>
-                <button class="small-btn start-btn" id="btnStart">スタート</button>
-                <button class="small-btn" id="btnPlus">+5分</button>
-                <button class="small-btn reset-btn" id="btnReset" style="background: rgba(255,100,100,0.2); border-color: rgba(255,100,100,0.5); color: #ff8080;">リセット</button>
-            </div>
-        </div>
-        <div class="belt-container" id="beltContainer">
-            <button class="belt-button" id="btnEat">
-                <div class="belt-core" id="beltCore">
-                    <span class="belt-text">たべたよ！</span>
+    <div id="app" class="landscape-layout">
+        <div class="left-panel glass-panel">
+            <!-- ヒーロー登場エリア -->
+            <div class="hero-container">
+                <div class="hero-mask" id="heroMask">
+                    <!-- 可愛いヒーローマスクのSVG -->
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="eye-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#ff6b6b" />
+                                <stop offset="100%" stop-color="#ff0000" />
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <!-- 丸くて可愛いアンテナ -->
+                        <path class="antenna" d="M 100 35 L 85 70 L 115 70 Z" fill="#ffd700" stroke="#ffb400" stroke-width="4" stroke-linejoin="round" filter="url(#glow)"/>
+                        <circle cx="100" cy="35" r="12" fill="#ffd700" />
+                        <!-- 顔ベース（ヘルメット風） -->
+                        <circle cx="100" cy="120" r="70" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="4"/>
+                        <!-- ヘルメットのバイザー部分（上半分） -->
+                        <path d="M 30 120 A 70 70 0 0 1 170 120 L 170 110 A 70 70 0 0 0 30 110 Z" fill="#ff4b4b" />
+                        <!-- 大きくて可愛い目 -->
+                        <ellipse class="eye right-eye" cx="135" cy="115" rx="25" ry="35" fill="url(#eye-gradient)" />
+                        <circle cx="140" cy="100" r="8" fill="#fff" />
+                        <ellipse class="eye left-eye" cx="65" cy="115" rx="25" ry="35" fill="url(#eye-gradient)" />
+                        <circle cx="70" cy="100" r="8" fill="#fff" />
+                        <!-- ほっぺた -->
+                        <ellipse cx="45" cy="145" rx="12" ry="8" fill="#ffb6c1" opacity="0.8"/>
+                        <ellipse cx="155" cy="145" rx="12" ry="8" fill="#ffb6c1" opacity="0.8"/>
+                        <!-- にっこり口 -->
+                        <path class="mouth" d="M 85 160 Q 100 175 115 160" fill="none" stroke="#ff6b6b" stroke-width="5" stroke-linecap="round"/>
+                    </svg>
                 </div>
-                <div class="belt-ring ring-left"></div>
-                <div class="belt-ring ring-right"></div>
-            </button>
+                <div class="speech-bubble" id="message">さあ、いっしょにたべよう！</div>
+            </div>
+
+            <!-- 変身ベルト風 もぐもぐボタン -->
+            <div class="belt-container" id="beltContainer">
+                <button class="belt-button" id="btnEat">
+                    <div class="belt-core" id="beltCore">
+                        <span class="belt-text">たべたよ！</span>
+                    </div>
+                    <div class="belt-ring ring-left"></div>
+                    <div class="belt-ring ring-right"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="right-panel glass-panel">
+            <!-- 制限時間タイマー -->
+            <div class="timer-section">
+                <div class="clock-container">
+                    <svg class="clock-svg" viewBox="0 0 100 100" id="clockSvg">
+                        <!-- Clock background with glow -->
+                        <circle cx="50" cy="50" r="48" fill="rgba(10, 20, 40, 0.8)" stroke="#4facfe" stroke-width="2"/>
+                        <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(79, 172, 254, 0.3)" stroke-width="2" filter="url(#glow)"/>
+                        
+                        <g id="clockTicks">
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(0 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(30 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(60 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(90 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(120 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(150 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(180 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(210 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(240 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(270 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(300 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(330 50 50)"/>
+                        </g>
+                        <circle cx="50" cy="50" r="24" fill="none" stroke="#ff4b4b" stroke-width="48" stroke-dasharray="150.796" stroke-dashoffset="0" transform="rotate(-90 50 50)" id="timeSlice" />
+                        <line x1="50" y1="50" x2="50" y2="12" stroke="#fff" stroke-width="3" stroke-linecap="round" id="minuteHand"/>
+                        <circle cx="50" cy="50" r="4" fill="#fff"/>
+                        <line x1="50" y1="55" x2="50" y2="10" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round" id="secondHand"/>
+                        <circle cx="50" cy="50" r="2" fill="#ffd700"/>
+                    </svg>
+                </div>
+                <div class="timer-display" id="timer">30:00</div>
+                <div class="timer-controls">
+                    <button class="small-btn" id="btnMinus">-5分</button>
+                    <button class="small-btn start-btn" id="btnStart">スタート</button>
+                    <button class="small-btn" id="btnPlus">+5分</button>
+                    <button class="small-btn reset-btn" id="btnReset" style="background: rgba(255,100,100,0.2); border-color: rgba(255,100,100,0.5); color: #ff8080;">リセット</button>
+                </div>
+            </div>
+            
+            <!-- ヒーローエネルギーゲージ (進捗) -->
+            <div class="progress-section">
+                <div class="progress-label">ヒーローエネルギー</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                    <div class="progress-glow"></div>
+                </div>
+            </div>
         </div>
     </div>
     <div id="confetti-container"></div>

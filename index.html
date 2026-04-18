@@ -9,120 +9,109 @@
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-        <!-- ヒーロー登場エリア -->
-        <div class="hero-container">
-            <div class="hero-mask" id="heroMask">
-                <!-- 可愛いヒーローマスクのSVG -->
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="eye-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#ff6b6b" />
-                            <stop offset="100%" stop-color="#ff0000" />
-                        </linearGradient>
-                        <filter id="glow">
-                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                            <feMerge>
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                            </feMerge>
-                        </filter>
-                    </defs>
-                    
-                    <!-- 丸くて可愛いアンテナ -->
-                    <path class="antenna" d="M 100 35 L 85 70 L 115 70 Z" fill="#ffd700" stroke="#ffb400" stroke-width="4" stroke-linejoin="round" filter="url(#glow)"/>
-                    <circle cx="100" cy="35" r="12" fill="#ffd700" />
-                    
-                    <!-- 顔ベース（ヘルメット風） -->
-                    <circle cx="100" cy="120" r="70" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="4"/>
-                    
-                    <!-- ヘルメットのバイザー部分（上半分） -->
-                    <path d="M 30 120 A 70 70 0 0 1 170 120 L 170 110 A 70 70 0 0 0 30 110 Z" fill="#ff4b4b" />
-                    
-                    <!-- 大きくて可愛い目 -->
-                    <ellipse class="eye right-eye" cx="135" cy="115" rx="25" ry="35" fill="url(#eye-gradient)" />
-                    <circle cx="140" cy="100" r="8" fill="#fff" /> <!-- キラキラハイライト -->
-                    
-                    <ellipse class="eye left-eye" cx="65" cy="115" rx="25" ry="35" fill="url(#eye-gradient)" />
-                    <circle cx="70" cy="100" r="8" fill="#fff" /> <!-- キラキラハイライト -->
-                    
-                    <!-- ほっぺた -->
-                    <ellipse cx="45" cy="145" rx="12" ry="8" fill="#ffb6c1" opacity="0.8"/>
-                    <ellipse cx="155" cy="145" rx="12" ry="8" fill="#ffb6c1" opacity="0.8"/>
-                    
-                    <!-- にっこり口 -->
-                    <path class="mouth" d="M 85 160 Q 100 175 115 160" fill="none" stroke="#ff6b6b" stroke-width="5" stroke-linecap="round"/>
-                </svg>
-            </div>
-            <div class="speech-bubble" id="message">さあ、いっしょにたべよう！</div>
-        </div>
-
-        <!-- ヒーローエネルギーゲージ (進捗) -->
-        <div class="progress-section">
-            <div class="progress-label">ヒーローエネルギー</div>
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="progressBar"></div>
-                <div class="progress-glow"></div>
-            </div>
-        </div>
-
-        <!-- 制限時間タイマー -->
-        <div class="timer-section">
-            <div class="clock-container">
-                <svg class="clock-svg" viewBox="0 0 100 100" id="clockSvg">
-                    <!-- Clock background -->
-                    <circle cx="50" cy="50" r="48" fill="#1a1a1a" stroke="#444" stroke-width="4"/>
-                    
-                    <!-- Tick marks will be generated or static -->
-                    <g id="clockTicks">
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(0 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(30 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(60 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(90 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(120 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(150 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(180 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(210 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(240 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(270 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(300 50 50)"/>
-                        <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(330 50 50)"/>
-                    </g>
-                    
-                    <!-- Remaining time slice -->
-                    <circle cx="50" cy="50" r="24" fill="none" stroke="#ff4b4b" stroke-width="48"
-                            stroke-dasharray="150.796" stroke-dashoffset="0"
-                            transform="rotate(-90 50 50)" id="timeSlice" />
-                    
-                    <!-- Minute hand (shows remaining minutes limit) -->
-                    <line x1="50" y1="50" x2="50" y2="12" stroke="#fff" stroke-width="3" stroke-linecap="round" id="minuteHand"/>
-                    
-                    <!-- Center dot -->
-                    <circle cx="50" cy="50" r="4" fill="#fff"/>
-                    
-                    <!-- Second hand (shows seconds ticking) -->
-                    <line x1="50" y1="55" x2="50" y2="10" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round" id="secondHand"/>
-                    <circle cx="50" cy="50" r="2" fill="#ffd700"/>
-                </svg>
-            </div>
-            <div class="timer-display" id="timer">30:00</div>
-            <div class="timer-controls">
-                <button class="small-btn" id="btnMinus">-5分</button>
-                <button class="small-btn start-btn" id="btnStart">スタート</button>
-                <button class="small-btn" id="btnPlus">+5分</button>
-                <button class="small-btn reset-btn" id="btnReset" style="background: rgba(255,100,100,0.2); border-color: rgba(255,100,100,0.5); color: #ff8080;">リセット</button>
-            </div>
-        </div>
-
-        <!-- 変身ベルト風 もぐもぐボタン -->
-        <div class="belt-container" id="beltContainer">
-            <button class="belt-button" id="btnEat">
-                <div class="belt-core" id="beltCore">
-                    <span class="belt-text">たべたよ！</span>
+    <div id="app" class="landscape-layout">
+        <div class="left-panel glass-panel">
+            <!-- ヒーロー登場エリア -->
+            <div class="hero-container">
+                <div class="hero-mask" id="heroMask">
+                    <!-- 可愛いヒーローマスクのSVG -->
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="eye-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#ff6b6b" />
+                                <stop offset="100%" stop-color="#ff0000" />
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <!-- 丸くて可愛いアンテナ -->
+                        <path class="antenna" d="M 100 35 L 85 70 L 115 70 Z" fill="#ffd700" stroke="#ffb400" stroke-width="4" stroke-linejoin="round" filter="url(#glow)"/>
+                        <circle cx="100" cy="35" r="12" fill="#ffd700" />
+                        <!-- 顔ベース（ヘルメット風） -->
+                        <circle cx="100" cy="120" r="70" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="4"/>
+                        <!-- ヘルメットのバイザー部分（上半分） -->
+                        <path d="M 30 120 A 70 70 0 0 1 170 120 L 170 110 A 70 70 0 0 0 30 110 Z" fill="#ff4b4b" />
+                        <!-- 大きくて可愛い目 -->
+                        <ellipse class="eye right-eye" cx="135" cy="115" rx="25" ry="35" fill="url(#eye-gradient)" />
+                        <circle cx="140" cy="100" r="8" fill="#fff" />
+                        <ellipse class="eye left-eye" cx="65" cy="115" rx="25" ry="35" fill="url(#eye-gradient)" />
+                        <circle cx="70" cy="100" r="8" fill="#fff" />
+                        <!-- ほっぺた -->
+                        <ellipse cx="45" cy="145" rx="12" ry="8" fill="#ffb6c1" opacity="0.8"/>
+                        <ellipse cx="155" cy="145" rx="12" ry="8" fill="#ffb6c1" opacity="0.8"/>
+                        <!-- にっこり口 -->
+                        <path class="mouth" d="M 85 160 Q 100 175 115 160" fill="none" stroke="#ff6b6b" stroke-width="5" stroke-linecap="round"/>
+                    </svg>
                 </div>
-                <div class="belt-ring ring-left"></div>
-                <div class="belt-ring ring-right"></div>
-            </button>
+                <div class="speech-bubble" id="message">さあ、いっしょにたべよう！</div>
+            </div>
+
+            <!-- 変身ベルト風 もぐもぐボタン -->
+            <div class="belt-container" id="beltContainer">
+                <button class="belt-button" id="btnEat">
+                    <div class="belt-core" id="beltCore">
+                        <span class="belt-text">たべたよ！</span>
+                    </div>
+                    <div class="belt-ring ring-left"></div>
+                    <div class="belt-ring ring-right"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="right-panel glass-panel">
+            <!-- 制限時間タイマー -->
+            <div class="timer-section">
+                <div class="clock-container">
+                    <svg class="clock-svg" viewBox="0 0 100 100" id="clockSvg">
+                        <!-- Clock background with glow -->
+                        <circle cx="50" cy="50" r="48" fill="rgba(10, 20, 40, 0.8)" stroke="#4facfe" stroke-width="2"/>
+                        <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(79, 172, 254, 0.3)" stroke-width="2" filter="url(#glow)"/>
+                        
+                        <g id="clockTicks">
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(0 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(30 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(60 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(90 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(120 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(150 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(180 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(210 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(240 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(270 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(300 50 50)"/>
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="#888" stroke-width="2" transform="rotate(330 50 50)"/>
+                        </g>
+                        <circle cx="50" cy="50" r="24" fill="none" stroke="#ff4b4b" stroke-width="48"
+                                stroke-dasharray="150.796" stroke-dashoffset="0"
+                                transform="rotate(-90 50 50)" id="timeSlice" />
+                        <line x1="50" y1="50" x2="50" y2="12" stroke="#fff" stroke-width="3" stroke-linecap="round" id="minuteHand"/>
+                        <circle cx="50" cy="50" r="4" fill="#fff"/>
+                        <line x1="50" y1="55" x2="50" y2="10" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round" id="secondHand"/>
+                        <circle cx="50" cy="50" r="2" fill="#ffd700"/>
+                    </svg>
+                </div>
+                <div class="timer-display" id="timer">30:00</div>
+                <div class="timer-controls">
+                    <button class="small-btn" id="btnMinus">-5分</button>
+                    <button class="small-btn start-btn" id="btnStart">スタート</button>
+                    <button class="small-btn" id="btnPlus">+5分</button>
+                    <button class="small-btn reset-btn" id="btnReset" style="background: rgba(255,100,100,0.2); border-color: rgba(255,100,100,0.5); color: #ff8080;">リセット</button>
+                </div>
+            </div>
+
+            <!-- ヒーローエネルギーゲージ (進捗) -->
+            <div class="progress-section">
+                <div class="progress-label">ヒーローエネルギー</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                    <div class="progress-glow"></div>
+                </div>
+            </div>
         </div>
     </div>
 

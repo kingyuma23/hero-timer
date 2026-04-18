@@ -6,7 +6,7 @@
 
 body {
     font-family: 'M PLUS Rounded 1c', sans-serif;
-    background: linear-gradient(135deg, #0a0a0a, #1a1a1a, #2b0000);
+    background: linear-gradient(135deg, #0B132B, #1C2541, #0a0a1a);
     color: #fff;
     height: 100vh;
     overflow: hidden; /* Prevent scrolling on iPad */
@@ -18,15 +18,35 @@ body {
     -webkit-user-select: none;
 }
 
-#app {
+#app.landscape-layout {
     width: 100%;
-    max-width: 800px;
+    max-width: 1200px;
     height: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
-    padding: 20px;
-    position: relative;
+    align-items: center;
+    padding: 3vh 4vw;
+    gap: 3vw;
+}
+
+.left-panel, .right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 40px;
+    padding: 3vh 2vw;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.05);
 }
 
 /* ヒーローエリア */
@@ -34,18 +54,17 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 4vh;
     position: relative;
     z-index: 10;
 }
 
 .hero-mask {
-    width: 25vh;
-    height: 25vh;
-    max-width: 250px;
-    max-height: 250px;
+    width: 32vh;
+    height: 32vh;
+    max-width: 300px;
+    max-height: 300px;
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.3));
+    filter: drop-shadow(0 0 30px rgba(79, 172, 254, 0.5));
 }
 
 .hero-mask.eating {
@@ -116,7 +135,7 @@ body {
 .progress-bar-container {
     width: 100%;
     height: 40px;
-    background: #222;
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 20px;
     overflow: hidden;
     position: relative;
@@ -151,21 +170,19 @@ body {
     100% { background-position: -100% 0%; }
 }
 
-/* タイマーエリア */
 .timer-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 3vh 0;
 }
 
 .clock-container {
-    width: 25vh;
-    height: 25vh;
-    max-width: 250px;
-    max-height: 250px;
-    margin-bottom: 15px;
-    filter: drop-shadow(0 0 15px rgba(0,0,0,0.5));
+    width: 32vh;
+    height: 32vh;
+    max-width: 300px;
+    max-height: 300px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
 }
 
 .clock-svg {
@@ -179,12 +196,13 @@ body {
 }
 
 .timer-display {
-    font-size: 5rem;
+    font-size: 4.5rem;
     font-weight: 900;
     font-variant-numeric: tabular-nums;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-    margin-bottom: 15px;
-    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(79, 172, 254, 0.8);
+    margin-bottom: 20px;
+    letter-spacing: 3px;
+    color: #4facfe;
 }
 
 .timer-display.danger {
@@ -238,14 +256,13 @@ body {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-bottom: 5vh;
 }
 
 .belt-button {
-    background: #222;
-    width: 300px;
-    height: 140px;
-    border-radius: 70px;
+    background: #111;
+    width: 280px;
+    height: 110px;
+    border-radius: 55px;
     position: relative;
     border: 5px solid #444;
     box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 5px 15px rgba(255,255,255,0.2);
@@ -265,8 +282,8 @@ body {
 }
 
 .belt-core {
-    width: 110px;
-    height: 110px;
+    width: 90px;
+    height: 90px;
     background: radial-gradient(circle, #ff0000 0%, #800000 100%);
     border-radius: 50%;
     display: flex;
