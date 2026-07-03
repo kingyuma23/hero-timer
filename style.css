@@ -63,16 +63,19 @@ body {
     height: 32vh;
     max-width: 300px;
     max-height: 300px;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* たべるたびに --hero-scale が大きくなり、ヒーローが育つ */
+    transform: scale(var(--hero-scale, 1));
+    transform-origin: center 75%;
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     filter: drop-shadow(0 0 30px rgba(79, 172, 254, 0.5));
 }
 
 .hero-mask.eating {
-    transform: scale(1.1) translateY(-10px);
+    transform: scale(calc(var(--hero-scale, 1) * 1.15)) translateY(-10px);
 }
 
 .hero-mask.happy {
-    transform: scale(1.2) translateY(-20px) rotate(5deg);
+    transform: scale(calc(var(--hero-scale, 1) * 1.2)) translateY(-20px) rotate(5deg);
     filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8));
 }
 

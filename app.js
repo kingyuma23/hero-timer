@@ -10,7 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnEat = document.getElementById('btnEat');
     const btnReset = document.getElementById('btnReset');
     const timeSlice = document.getElementById('timeSlice');
+    const hourHand = document.getElementById('hourHand');
     const minuteHand = document.getElementById('minuteHand');
+    const secondHand = document.getElementById('secondHand');
     
     // State
     let timerInterval = null;
@@ -19,6 +21,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let currentBites = 0;
     const maxBites = 20; // Number of bites to reach 100%
+
+    // ヒーローの成長（たべるたびに大きくなる）
+    const heroMinScale = 0.5;
+    const heroMaxScale = 1.15;
+    function updateHeroSize(pop) {
+        const t = Math.min(currentBites / maxBites, 1);
+        const s = heroMinScale + (heroMaxScale - heroMinScale) * t;
+        heroMask.style.setProperty('--hero-scale', s.toFixed(3));
+    }
     
     const messages = [
         "すごい！",
@@ -47,23 +58,32 @@ document.addEventListener('DOMContentLoaded', () => {
             if (timeSlice) timeSlice.setAttribute('stroke', '#ff4b4b');
         }
 
-        // Update clock UI
-        if (timeSlice && minuteHand) {
-            // 秒単位でなめらかに動かす（60分 = 3600秒で1周）
-            const circumference = 150.796;
+    }
+
+    // 本物の時計：実際の時刻を針で表示し、長針の先から残り時間ぶんを赤く塗る
+    function updateClock() {
+        const now = new Date();
+        const sec = now.getSeconds() + now.getMilliseconds() / 1000;
+        const min = now.getMinutes() + sec / 60;
+        const hr = (now.getHours() % 12) + min / 60;
+
+        const secondAngle = sec * 6;   // 1秒 = 6度
+        const minuteAngle = min * 6;   // 1分 = 6度
+        const hourAngle = hr * 30;     // 1時間 = 30度
+
+        if (hourHand) hourHand.setAttribute('transform', `rotate(${hourAngle} 50 50)`);
+        if (minuteHand) minuteHand.setAttribute('transform', `rotate(${minuteAngle} 50 50)`);
+        if (secondHand) secondHand.setAttribute('transform', `rotate(${secondAngle} 50 50)`);
+
+        // 赤い扇形：いまの長針の位置から、残り時間ぶんを時計回りに塗る
+        if (timeSlice) {
+            const circumference = 125.664; // 2 * PI * r (r=20)
             let fraction = totalSeconds / 3600;
             if (fraction > 1) fraction = 1;
             if (fraction < 0) fraction = 0;
-
-            // 針の角度：残り時間の割合ぶんだけ12時位置から時計回り
-            const minuteAngle = fraction * 360;
-
-            // 扇形：12時位置（0）から残り時間ぶんを時計回りに塗る
-            timeSlice.setAttribute('transform', 'rotate(-90 50 50)');
+            timeSlice.setAttribute('transform', `rotate(${minuteAngle - 90} 50 50)`);
             timeSlice.style.strokeDasharray = `${circumference * fraction} ${circumference}`;
             timeSlice.style.strokeDashoffset = 0;
-
-            minuteHand.setAttribute('transform', `rotate(${minuteAngle} 50 50)`);
         }
     }
 
@@ -125,13 +145,17 @@ document.addEventListener('DOMContentLoaded', () => {
             currentBites++;
             const percentage = (currentBites / maxBites) * 100;
             progressBar.style.width = `${percentage}%`;
-            
+            updateHeroSize();
+
             if (currentBites === maxBites) {
                 // Clear!
                 heroMask.classList.add('happy');
                 showMessage("みっしょんくりあ！！ぜんぶたべたね！");
                 fireConfetti();
                 if (isRunning) toggleTimer(); // Stop timer
+            } else if (currentBites % 5 === 0) {
+                // 成長の節目
+                showMessage("おおきくなってきた！");
             } else {
                 // Random message
                 const msg = messages[Math.floor(Math.random() * messages.length)];
@@ -188,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         updateTimerDisplay();
         progressBar.style.width = '0%';
+        updateHeroSize();
         heroMask.classList.remove('happy', 'eating');
         message.classList.remove('show');
         
@@ -205,6 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial setup
     updateTimerDisplay();
+    updateHeroSize();
+    updateClock();
+    setInterval(updateClock, 200); // 実時刻の時計は常に動かす
     
     // Add touch support for better mobile/iPad responsiveness
     document.addEventListener('touchmove', function(e) { e.preventDefault(); }, { passive: false });
