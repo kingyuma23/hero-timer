@@ -342,6 +342,60 @@ body {
     z-index: 9999;
 }
 
+/* ===== もぐもぐクールダウン ===== */
+
+/* もぐもぐちゅう：ベルトが暗くなり、コアがゆっくり脈打つ */
+.belt-button.cooldown {
+    filter: grayscale(0.5) brightness(0.75);
+    cursor: default;
+}
+.belt-button.cooldown:active {
+    transform: none;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 5px 15px rgba(255,255,255,0.2);
+}
+.belt-button.cooldown .belt-core {
+    background: radial-gradient(circle, #ff9800 0%, #7a4a00 100%);
+    box-shadow: 0 0 20px rgba(255,152,0,0.6), inset 0 0 10px rgba(255,255,255,0.4);
+    animation: chew-pulse 0.8s ease-in-out infinite;
+}
+.belt-button.cooldown .belt-text {
+    font-size: 1.2rem;
+}
+@keyframes chew-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+}
+
+/* ごっくん完了：また押せるよ！のキラキラ */
+.belt-button.ready .belt-core {
+    animation: ready-glow 0.9s ease-in-out infinite;
+}
+@keyframes ready-glow {
+    0%, 100% { box-shadow: 0 0 30px rgba(255,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.5); }
+    50% { box-shadow: 0 0 60px rgba(255,230,0,1), inset 0 0 20px rgba(255,255,255,0.9); }
+}
+
+/* クールダウン中に押したときのぷるぷる */
+.belt-button.shake {
+    animation: belt-shake 0.4s;
+}
+@keyframes belt-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    50% { transform: translateX(8px); }
+    75% { transform: translateX(-5px); }
+}
+
+/* ヒーローのもぐもぐアニメーション（成長スケールと衝突しないようsvgに適用） */
+.hero-mask.chewing svg {
+    animation: hero-chew 0.7s ease-in-out infinite;
+    transform-origin: center 70%;
+}
+@keyframes hero-chew {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.93) scaleX(1.04); }
+}
+
 </style>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;900&display=swap" rel="stylesheet">
 </head>
@@ -548,6 +602,49 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentBites = 0;
     const maxBites = 20; // Number of bites to reach 100%
 
+    // もぐもぐクールダウン（よく噛む時間）
+    const COOLDOWN_SECONDS = 25; // ← ここを変えると噛む時間を調整できます
+    let cooldownRemaining = 0;
+    let cooldownInterval = null;
+    const beltText = document.querySelector('.belt-text');
+    let busyMessageAt = 0;
+
+    function startCooldown() {
+        cooldownRemaining = COOLDOWN_SECONDS;
+        btnEat.classList.remove('ready');
+        btnEat.classList.add('cooldown');
+        heroMask.classList.add('chewing');
+        beltText.textContent = `もぐもぐ ${cooldownRemaining}`;
+
+        clearInterval(cooldownInterval);
+        cooldownInterval = setInterval(() => {
+            cooldownRemaining--;
+            if (cooldownRemaining > 0) {
+                beltText.textContent = `もぐもぐ ${cooldownRemaining}`;
+            } else {
+                endCooldown();
+            }
+        }, 1000);
+    }
+
+    function endCooldown() {
+        clearInterval(cooldownInterval);
+        cooldownRemaining = 0;
+        btnEat.classList.remove('cooldown');
+        btnEat.classList.add('ready');
+        heroMask.classList.remove('chewing');
+        beltText.textContent = 'たべたよ！';
+        showMessage('ごっくん！つぎのひとくちどうぞ！');
+    }
+
+    function cancelCooldown() {
+        clearInterval(cooldownInterval);
+        cooldownRemaining = 0;
+        btnEat.classList.remove('cooldown', 'ready');
+        heroMask.classList.remove('chewing');
+        beltText.textContent = 'たべたよ！';
+    }
+
     // ヒーローの成長（たべるたびに大きくなる）
     const heroMinScale = 0.5;
     const heroMaxScale = 1.15;
@@ -655,9 +752,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function eatAction() {
-        // Play sound if possible (browser might block it without interaction, but this is a click handler)
-        // Here we just do visual feedback
-        
+        // もぐもぐちゅうは押せない（よく噛もう！）
+        if (cooldownRemaining > 0) {
+            const now = Date.now();
+            if (now - busyMessageAt > 2000) {
+                busyMessageAt = now;
+                showMessage('まだもぐもぐちゅう！よくかんでね');
+            }
+            btnEat.classList.add('shake');
+            setTimeout(() => btnEat.classList.remove('shake'), 400);
+            return;
+        }
+        btnEat.classList.remove('ready');
+
         heroMask.classList.add('eating');
         btnEat.classList.add('active');
         
@@ -675,17 +782,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (currentBites === maxBites) {
                 // Clear!
+                cancelCooldown();
                 heroMask.classList.add('happy');
                 showMessage("みっしょんくりあ！！ぜんぶたべたね！");
                 fireConfetti();
                 if (isRunning) toggleTimer(); // Stop timer
-            } else if (currentBites % 5 === 0) {
-                // 成長の節目
-                showMessage("おおきくなってきた！");
             } else {
-                // Random message
-                const msg = messages[Math.floor(Math.random() * messages.length)];
-                showMessage(msg);
+                if (currentBites % 5 === 0) {
+                    // 成長の節目
+                    showMessage("おおきくなってきた！");
+                } else {
+                    // Random message
+                    const msg = messages[Math.floor(Math.random() * messages.length)];
+                    showMessage(msg);
+                }
+                startCooldown(); // よく噛む時間スタート
             }
         } else {
              // Already finished
@@ -736,10 +847,11 @@ document.addEventListener('DOMContentLoaded', () => {
         totalSeconds = 30 * 60; // 30 minutes
         currentBites = 0;
         
+        cancelCooldown();
         updateTimerDisplay();
         progressBar.style.width = '0%';
         updateHeroSize();
-        heroMask.classList.remove('happy', 'eating');
+        heroMask.classList.remove('happy', 'eating', 'chewing');
         message.classList.remove('show');
         
         if (typeof confetti === 'function' && confetti.reset) {

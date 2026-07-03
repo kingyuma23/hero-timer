@@ -333,3 +333,57 @@ body {
     pointer-events: none;
     z-index: 9999;
 }
+
+/* ===== もぐもぐクールダウン ===== */
+
+/* もぐもぐちゅう：ベルトが暗くなり、コアがゆっくり脈打つ */
+.belt-button.cooldown {
+    filter: grayscale(0.5) brightness(0.75);
+    cursor: default;
+}
+.belt-button.cooldown:active {
+    transform: none;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 5px 15px rgba(255,255,255,0.2);
+}
+.belt-button.cooldown .belt-core {
+    background: radial-gradient(circle, #ff9800 0%, #7a4a00 100%);
+    box-shadow: 0 0 20px rgba(255,152,0,0.6), inset 0 0 10px rgba(255,255,255,0.4);
+    animation: chew-pulse 0.8s ease-in-out infinite;
+}
+.belt-button.cooldown .belt-text {
+    font-size: 1.2rem;
+}
+@keyframes chew-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+}
+
+/* ごっくん完了：また押せるよ！のキラキラ */
+.belt-button.ready .belt-core {
+    animation: ready-glow 0.9s ease-in-out infinite;
+}
+@keyframes ready-glow {
+    0%, 100% { box-shadow: 0 0 30px rgba(255,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.5); }
+    50% { box-shadow: 0 0 60px rgba(255,230,0,1), inset 0 0 20px rgba(255,255,255,0.9); }
+}
+
+/* クールダウン中に押したときのぷるぷる */
+.belt-button.shake {
+    animation: belt-shake 0.4s;
+}
+@keyframes belt-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    50% { transform: translateX(8px); }
+    75% { transform: translateX(-5px); }
+}
+
+/* ヒーローのもぐもぐアニメーション（成長スケールと衝突しないようsvgに適用） */
+.hero-mask.chewing svg {
+    animation: hero-chew 0.7s ease-in-out infinite;
+    transform-origin: center 70%;
+}
+@keyframes hero-chew {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.93) scaleX(1.04); }
+}
