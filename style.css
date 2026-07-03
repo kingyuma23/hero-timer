@@ -397,3 +397,129 @@ body {
     55%  { transform: scale(1.2) rotate(6deg); filter: brightness(1.6); }
     100% { transform: scale(1) rotate(0); filter: brightness(1); }
 }
+
+/* ===== ずかん・せっていボタン ===== */
+.top-buttons {
+    position: fixed;
+    top: 12px;
+    right: 14px;
+    display: flex;
+    gap: 10px;
+    z-index: 300;
+}
+.icon-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    background: rgba(20,30,50,0.75);
+    font-size: 1.35rem;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.1s;
+}
+.icon-btn:active { transform: scale(0.9); }
+
+/* ===== モーダル共通 ===== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 12, 0.68);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 500;
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+    background: rgba(15, 25, 45, 0.96);
+    border: 2px solid rgba(79, 172, 254, 0.45);
+    border-radius: 24px;
+    padding: 18px 22px 22px;
+    width: min(92vw, 660px);
+    max-height: 86vh;
+    overflow-y: auto;
+    color: #fff;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    -webkit-overflow-scrolling: touch;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+.modal-header h2 { font-size: 1.25rem; margin: 0; }
+.close-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 1.4rem;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ===== スタンプ＆れんぞく ===== */
+.streak-count { font-size: 1.1rem; font-weight: 900; margin-bottom: 8px; }
+.stamp-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stamp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 46px;
+    padding: 6px 0;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+}
+.stamp.got { background: rgba(255,215,0,0.22); }
+.stamp-mark { font-size: 1.1rem; }
+.stamp-day { font-size: 0.62rem; color: #aac; }
+.streak-bonus { font-size: 0.85rem; font-weight: 700; color: #ffd700; margin-bottom: 14px; }
+.streak-bonus.dim { color: #8aa; }
+
+/* ===== ずかんグリッド ===== */
+.dex-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+.dex-cell {
+    background: rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 10px 6px 8px;
+    text-align: center;
+}
+.dex-icon svg { width: 100%; height: auto; display: block; }
+.dex-cell.locked .dex-icon svg { filter: brightness(0) opacity(0.45); }
+.dex-name { font-size: 0.68rem; margin-top: 4px; font-weight: 700; line-height: 1.3; }
+
+/* ===== せってい ===== */
+.setting-row { margin-bottom: 18px; }
+.setting-row label {
+    display: block;
+    font-size: 0.85rem;
+    color: #9fc4ff;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+.opt-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt-btn {
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+}
+.opt-btn.selected {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: #06213a;
+    border-color: transparent;
+}

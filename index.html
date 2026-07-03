@@ -10,6 +10,10 @@
 </head>
 <body>
     <div id="app" class="landscape-layout">
+        <div class="top-buttons">
+            <button class="icon-btn" id="btnDex" aria-label="ずかん">📖</button>
+            <button class="icon-btn" id="btnSettings" aria-label="せってい">⚙️</button>
+        </div>
         <div class="left-panel glass-panel">
             <!-- ヒーロー登場エリア -->
             <div class="hero-container">
@@ -161,6 +165,26 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- モグずかん -->
+    <div class="modal-overlay hidden" id="dexModal">
+        <div class="modal">
+            <div class="modal-header"><h2>📖 モグずかん</h2><button class="close-btn" data-close>×</button></div>
+            <div id="streakBox"></div>
+            <div class="dex-grid" id="dexGrid"></div>
+        </div>
+    </div>
+
+    <!-- おうちのひと せってい -->
+    <div class="modal-overlay hidden" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header"><h2>⚙️ おうちのひと せってい</h2><button class="close-btn" data-close>×</button></div>
+            <div class="setting-row"><label>たべる かいすう（きょうのごはんのりょう）</label><div class="opt-group" id="optBites"></div></div>
+            <div class="setting-row"><label>もぐもぐ じかん（かむびょうすう）</label><div class="opt-group" id="optCooldown"></div></div>
+            <div class="setting-row"><label>おと（こうかおん）</label><div class="opt-group" id="optSound"></div></div>
+            <div class="setting-row"><label>こえ（おしゃべり）</label><div class="opt-group" id="optVoice"></div></div>
         </div>
     </div>
 
