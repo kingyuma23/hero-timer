@@ -22,6 +22,49 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentBites = 0;
     const maxBites = 20; // Number of bites to reach 100%
 
+    // もぐもぐクールダウン（よく噛む時間）
+    const COOLDOWN_SECONDS = 25; // ← ここを変えると噛む時間を調整できます
+    let cooldownRemaining = 0;
+    let cooldownInterval = null;
+    const beltText = document.querySelector('.belt-text');
+    let busyMessageAt = 0;
+
+    function startCooldown() {
+        cooldownRemaining = COOLDOWN_SECONDS;
+        btnEat.classList.remove('ready');
+        btnEat.classList.add('cooldown');
+        heroMask.classList.add('chewing');
+        beltText.textContent = `もぐもぐ ${cooldownRemaining}`;
+
+        clearInterval(cooldownInterval);
+        cooldownInterval = setInterval(() => {
+            cooldownRemaining--;
+            if (cooldownRemaining > 0) {
+                beltText.textContent = `もぐもぐ ${cooldownRemaining}`;
+            } else {
+                endCooldown();
+            }
+        }, 1000);
+    }
+
+    function endCooldown() {
+        clearInterval(cooldownInterval);
+        cooldownRemaining = 0;
+        btnEat.classList.remove('cooldown');
+        btnEat.classList.add('ready');
+        heroMask.classList.remove('chewing');
+        beltText.textContent = 'たべたよ！';
+        showMessage('ごっくん！つぎのひとくちどうぞ！');
+    }
+
+    function cancelCooldown() {
+        clearInterval(cooldownInterval);
+        cooldownRemaining = 0;
+        btnEat.classList.remove('cooldown', 'ready');
+        heroMask.classList.remove('chewing');
+        beltText.textContent = 'たべたよ！';
+    }
+
     // ヒーローの成長（たべるたびに大きくなる）
     const heroMinScale = 0.5;
     const heroMaxScale = 1.15;
@@ -129,9 +172,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function eatAction() {
-        // Play sound if possible (browser might block it without interaction, but this is a click handler)
-        // Here we just do visual feedback
-        
+        // もぐもぐちゅうは押せない（よく噛もう！）
+        if (cooldownRemaining > 0) {
+            const now = Date.now();
+            if (now - busyMessageAt > 2000) {
+                busyMessageAt = now;
+                showMessage('まだもぐもぐちゅう！よくかんでね');
+            }
+            btnEat.classList.add('shake');
+            setTimeout(() => btnEat.classList.remove('shake'), 400);
+            return;
+        }
+        btnEat.classList.remove('ready');
+
         heroMask.classList.add('eating');
         btnEat.classList.add('active');
         
@@ -149,17 +202,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (currentBites === maxBites) {
                 // Clear!
+                cancelCooldown();
                 heroMask.classList.add('happy');
                 showMessage("みっしょんくりあ！！ぜんぶたべたね！");
                 fireConfetti();
                 if (isRunning) toggleTimer(); // Stop timer
-            } else if (currentBites % 5 === 0) {
-                // 成長の節目
-                showMessage("おおきくなってきた！");
             } else {
-                // Random message
-                const msg = messages[Math.floor(Math.random() * messages.length)];
-                showMessage(msg);
+                if (currentBites % 5 === 0) {
+                    // 成長の節目
+                    showMessage("おおきくなってきた！");
+                } else {
+                    // Random message
+                    const msg = messages[Math.floor(Math.random() * messages.length)];
+                    showMessage(msg);
+                }
+                startCooldown(); // よく噛む時間スタート
             }
         } else {
              // Already finished
@@ -210,10 +267,11 @@ document.addEventListener('DOMContentLoaded', () => {
         totalSeconds = 30 * 60; // 30 minutes
         currentBites = 0;
         
+        cancelCooldown();
         updateTimerDisplay();
         progressBar.style.width = '0%';
         updateHeroSize();
-        heroMask.classList.remove('happy', 'eating');
+        heroMask.classList.remove('happy', 'eating', 'chewing');
         message.classList.remove('show');
         
         if (typeof confetti === 'function' && confetti.reset) {
