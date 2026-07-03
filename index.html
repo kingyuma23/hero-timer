@@ -15,40 +15,22 @@
             <div class="hero-container">
                 <div class="hero-mask" id="heroMask">
                     <!-- 可愛いヒーローマスクのSVG -->
-                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="eye-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#ff6b6b" />
-                                <stop offset="100%" stop-color="#ff0000" />
-                            </linearGradient>
-                            <filter id="glow">
-                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                                <feMerge>
-                                    <feMergeNode in="coloredBlur"/>
-                                    <feMergeNode in="SourceGraphic"/>
-                                </feMerge>
-                            </filter>
-                        </defs>
-                        <!-- 丸くて可愛いアンテナ -->
-                        <path class="antenna" d="M 100 35 L 85 70 L 115 70 Z" fill="#ffd700" stroke="#ffb400" stroke-width="4" stroke-linejoin="round" filter="url(#glow)"/>
-                        <circle cx="100" cy="35" r="12" fill="#ffd700" />
-                        <!-- 顔ベース（ヘルメット風） -->
-                        <circle cx="100" cy="120" r="70" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="4"/>
-                        <!-- ヘルメットのバイザー部分（上半分） -->
-                        <path d="M 30 120 A 70 70 0 0 1 170 120 L 170 110 A 70 70 0 0 0 30 110 Z" fill="#ff4b4b" />
-                        <!-- 大きくて可愛い目 -->
-                        <ellipse class="eye right-eye" cx="135" cy="115" rx="25" ry="35" fill="url(#eye-gradient)" />
-                        <circle cx="140" cy="100" r="8" fill="#fff" />
-                        <ellipse class="eye left-eye" cx="65" cy="115" rx="25" ry="35" fill="url(#eye-gradient)" />
-                        <circle cx="70" cy="100" r="8" fill="#fff" />
-                        <!-- ほっぺた -->
-                        <ellipse cx="45" cy="145" rx="12" ry="8" fill="#ffb6c1" opacity="0.8"/>
-                        <ellipse cx="155" cy="145" rx="12" ry="8" fill="#ffb6c1" opacity="0.8"/>
-                        <!-- にっこり口 -->
-                        <path class="mouth" d="M 85 160 Q 100 175 115 160" fill="none" stroke="#ff6b6b" stroke-width="5" stroke-linecap="round"/>
-                    </svg>
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<ellipse cx="100" cy="115" rx="60" ry="72" fill="#fffaf0" stroke="#f0dcc0" stroke-width="5"/>
+<circle cx="70" cy="82" r="9" fill="#ffd9e0"/>
+<circle cx="133" cy="70" r="7" fill="#c8f2e0"/>
+<circle cx="127" cy="155" r="9" fill="#cfe3ff"/>
+<circle cx="70" cy="152" r="6" fill="#fff1b8"/>
+<ellipse class="eye" cx="82" cy="112" rx="7" ry="9" fill="#3a3a3a"/>
+<ellipse class="eye" cx="118" cy="112" rx="7" ry="9" fill="#3a3a3a"/>
+<circle cx="84.5" cy="108" r="2.5" fill="#fff"/>
+<circle cx="120.5" cy="108" r="2.5" fill="#fff"/>
+<ellipse cx="64" cy="127" rx="9" ry="6" fill="#ffc2cc"/>
+<ellipse cx="136" cy="127" rx="9" ry="6" fill="#ffc2cc"/>
+<path class="mouth" d="M 91 129 Q 100 138 109 129" fill="none" stroke="#e08585" stroke-width="4" stroke-linecap="round"/>
+</svg>
                 </div>
-                <div class="speech-bubble" id="message">さあ、いっしょにたべよう！</div>
+                <div class="speech-bubble" id="message">たべると…しんかするよ！</div>
             </div>
 
             <!-- ヒーローエネルギーゲージ (進捗) -->

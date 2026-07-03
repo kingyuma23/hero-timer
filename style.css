@@ -387,3 +387,13 @@ body {
     0%, 100% { transform: scaleY(1); }
     50% { transform: scaleY(0.93) scaleX(1.04); }
 }
+
+/* ===== 進化エフェクト ===== */
+.hero-mask.evolving svg {
+    animation: evolve-pop 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes evolve-pop {
+    0%   { transform: scale(0.2) rotate(-15deg); filter: brightness(4) saturate(0); }
+    55%  { transform: scale(1.2) rotate(6deg); filter: brightness(1.6); }
+    100% { transform: scale(1) rotate(0); filter: brightness(1); }
+}
