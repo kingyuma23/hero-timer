@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hero-timer-v2';
+const CACHE_NAME = 'hero-timer-v3';
 const ASSETS = [
     './',
     './index.html',
@@ -14,11 +14,41 @@ self.addEventListener('install', (event) => {
         caches.open(CACHE_NAME)
             .then((cache) => cache.addAll(ASSETS))
     );
+    // 待機せず即座に新しいSWを有効化
+    self.skipWaiting();
+});
+
+// 古いキャッシュを削除
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        caches.keys().then((keys) =>
+            Promise.all(
+                keys.filter((key) => key !== CACHE_NAME)
+                    .map((key) => caches.delete(key))
+            )
+        ).then(() => self.clients.claim())
+    );
 });
 
 self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request, { ignoreSearch: true })
-            .then((response) => response || fetch(event.request))
-    );
+    const url = new URL(event.request.url);
+
+    if (url.origin === location.origin) {
+        // 自分のファイルは「ネット優先」：更新がすぐ反映され、オフライン時はキャッシュを使う
+        event.respondWith(
+            fetch(event.request)
+                .then((response) => {
+                    const copy = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+                    return response;
+                })
+                .catch(() => caches.match(event.request, { ignoreSearch: true }))
+        );
+    } else {
+        // フォントやライブラリは「キャッシュ優先」で高速化
+        event.respondWith(
+            caches.match(event.request, { ignoreSearch: true })
+                .then((response) => response || fetch(event.request))
+        );
+    }
 });

@@ -49,17 +49,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update clock UI
         if (timeSlice && minuteHand) {
-            const fractionOfHour = m / 60;
+            // 秒単位でなめらかに動かす（60分 = 3600秒で1周）
             const circumference = 150.796;
-            let clampedFraction = fractionOfHour;
-            if (clampedFraction > 1) clampedFraction = 1;
-            
-            const minuteAngle = (1 - clampedFraction) * 360;
-            
-            timeSlice.setAttribute('transform', `rotate(${minuteAngle - 90} 50 50)`);
-            timeSlice.style.strokeDasharray = `${circumference * clampedFraction} ${circumference}`;
+            let fraction = totalSeconds / 3600;
+            if (fraction > 1) fraction = 1;
+            if (fraction < 0) fraction = 0;
+
+            // 針の角度：残り時間の割合ぶんだけ12時位置から時計回り
+            const minuteAngle = fraction * 360;
+
+            // 扇形：12時位置（0）から残り時間ぶんを時計回りに塗る
+            timeSlice.setAttribute('transform', 'rotate(-90 50 50)');
+            timeSlice.style.strokeDasharray = `${circumference * fraction} ${circumference}`;
             timeSlice.style.strokeDashoffset = 0;
-            
+
             minuteHand.setAttribute('transform', `rotate(${minuteAngle} 50 50)`);
         }
     }
